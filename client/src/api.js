@@ -7,7 +7,7 @@ async function handleLoginSuccess(token) {
   try {
     const response = await axios.get(`${URL}/decode`, {
       params: {
-        credential: token,
+        credential: token.credential,
       },
     });
     const decodedToken = response.data;

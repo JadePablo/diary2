@@ -1,3 +1,4 @@
+
 import { OAuth2Client } from 'google-auth-library';
 import User from './models/User.js'
 import Entry from './models/Entry.js'
@@ -11,8 +12,8 @@ async function decodeToken(req, res) {
 
     try {
         
-        const token = req.query['credential']
-
+        const token = req.query.credential
+   
         if (!token) {
             return res.status(400).json({ error: 'Token not provided' });
         }
@@ -36,6 +37,7 @@ async function decodeToken(req, res) {
         res.status(500).json({ error: 'Failed to verify token' });
       }
 }
+
 
 /*db-associated controllers*/
 

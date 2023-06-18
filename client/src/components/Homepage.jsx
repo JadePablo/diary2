@@ -18,6 +18,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import { getJournalEntries } from '../api.js'; // Update the path to match the location of your API file
 
 function useHandleVisitor(username) {
   const navigate = useNavigate();
@@ -30,50 +31,115 @@ function useHandleVisitor(username) {
   }, [name, username, navigate]);
 }
 
-function Copyright() {
-
+function JournalEntryPage({ entry, onClose }) {
   return (
-    <Typography variant="body2" color="text.secondary" align="center">
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
+    <Box
+      sx={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        zIndex: 9999,
+      }}
+    >
+      <Box
+        sx={{
+          width: '80%',
+          backgroundColor: 'white',
+          padding: '2rem',
+          color: 'black', // Set the text color to black
+        }}
+      >
+        <Typography variant="h4" component="h1" gutterBottom>
+          {entry.title}
+        </Typography>
+        <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+          {entry.open_date}
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          {entry.text_content}
+        </Typography>
+        {entry.images.map((image, index) => (
+          <div
+            key={index}
+            style={{
+              width: '100%',
+              height: '200px', // Adjust the desired height of the container
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1rem'
+            }}
+          >
+            <img
+              src={`data:image/png;base64,${image}`}
+              alt={`Image ${index + 1}`}
+              style={{
+                maxWidth: '100%',
+                maxHeight: '100%',
+                width: 'auto',
+                height: 'auto',
+                borderRadius: '8px'
+              }}
+            />
+          </div>
+        ))}
+        <Button variant="contained" onClick={onClose}>Back</Button>
+      </Box>
+    </Box>
   );
 }
-
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-
-// TODO remove, this demo shouldn't need to reset the theme.
-const defaultTheme = createTheme();
 
 export default function Homepage(props) {
   const { username } = useParams();
   useHandleVisitor(username);
-  
 
   const navigate = useNavigate();
   const handleCreateClick = () => {
     navigate(`/${username}/create`);
   };
+
+  const email = useSelector((state) => state.login.email);
+  const [journalEntries, setJournalEntries] = React.useState([]);
+  const [selectedEntry, setSelectedEntry] = React.useState(null);
+
+  const handleViewEntry = (entry) => {
+    setSelectedEntry(entry);
+  };
+
+  const handleCloseEntry = () => {
+    setSelectedEntry(null);
+  };
+
+  React.useEffect(() => {
+    const fetchJournalEntries = async () => {
+      try {
+        const entries = await getJournalEntries(email);
+        setJournalEntries(entries);
+      } catch (error) {
+        console.error('Failed to retrieve journal entries:', error.message);
+      }
+    };
+
+    fetchJournalEntries();
+  }, [email]);
+
+  const currentDate = new Date();
+
   return (
-    <ThemeProvider theme={defaultTheme}>
+    <ThemeProvider theme={createTheme()}>
       <CssBaseline />
-      <AppBar position="relative">
-        <Toolbar>
-          <CameraIcon sx={{ mr: 2 }} />
-          <Typography variant="h6" color="inherit" noWrap>
-            Diario
-          </Typography>
-        </Toolbar>
-      </AppBar>
+
       <main>
         {/* Hero unit */}
         <Box
           sx={{
-            bgcolor: 'background.paper',
+            bgcolor: 'paper',
             pt: 8,
             pb: 6,
           }}
@@ -89,9 +155,7 @@ export default function Homepage(props) {
               Hey,
             </Typography>
             <Typography variant="h5" align="center" color="text.secondary" paragraph>
-              Something short and leading about the collection below—its contents,
-              the creator, etc. Make it short and sweet, but not too short so folks
-              don&apos;t simply skip over it entirely.
+              your entries are below.
             </Typography>
             <Stack
               sx={{ pt: 4 }}
@@ -99,62 +163,105 @@ export default function Homepage(props) {
               spacing={2}
               justifyContent="center"
             >
-              <Button variant="contained" onClick={handleCreateClick}>+</Button>
-              <Button variant="outlined">Secondary action</Button>
+            <Button
+              variant="contained"
+              onClick={handleCreateClick}
+              sx={{
+                bgcolor: 'lightgrey',
+                color: 'black',
+                '&:hover': {
+                  bgcolor: 'black',
+                  color: 'white',
+                },
+              }}
+            >
+              +
+            </Button>
+              
             </Stack>
           </Container>
         </Box>
         <Container sx={{ py: 8 }} maxWidth="md">
           {/* End hero unit */}
           <Grid container spacing={4}>
-            {cards.map((card) => (
-              <Grid item key={card} xs={12} sm={6} md={4}>
+            {journalEntries.map((entry) => (
+              <Grid item key={entry.id} xs={12} sm={6} md={4}>
                 <Card
-                  sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}
+                  sx={{
+                    height: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    bgcolor: 'lightgrey', // Set the background color to light grey
+                    color: 'black', // Set the text color to black
+                  }}
                 >
-                  <CardMedia
-                    component="div"
+                <CardMedia
+                  component="div"
+                  sx={{
+                    // 16:9
+                    pt: '56.25%',
+                    backgroundImage: `url(data:image/png;base64,${entry.images[0]})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    borderRadius: '8px',
+                  }}
+                />
+                  <CardContent
                     sx={{
-                      // 16:9
-                      pt: '56.25%',
+                      flexGrow: 1,
+                      color: 'black', // Set the text color to black
                     }}
-                    image="https://source.unsplash.com/random?wallpapers"
-                  />
-                  <CardContent sx={{ flexGrow: 1 }}>
-                    <Typography gutterBottom variant="h5" component="h2">
-                      Heading
+                  >
+                    <Typography gutterBottom variant="h5" component="h2" sx={{ fontWeight: 'bold', fontSize: 20, color: 'black' }}>
+                      {entry.entry_title} {/* Use the title from the entry */}
                     </Typography>
-                    <Typography>
-                      This is a media card. You can use this section to describe the
-                      content.
+                    <Typography variant="body2" color="text.secondary">
+                      {new Date(entry.date_created).toLocaleDateString('en-US', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                      })}
+                    </Typography>
+                    <Typography variant="body2" color="text.secondary">
+                      {currentDate >= new Date(entry.open_date)
+                        ? `Available on: ${new Date(entry.open_date).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                        })}`
+                        : 'Not available yet'}
                     </Typography>
                   </CardContent>
-                  <CardActions>
-                    <Button size="small">View</Button>
-                    <Button size="small">Edit</Button>
-                  </CardActions>
+                  {currentDate >= new Date(entry.open_date) && (
+                    <CardActions>
+                      <Button
+                        size="small"
+                        onClick={() => handleViewEntry(entry)}
+                        sx={{
+                          bgcolor: '#f5f5f5', // Lighter gray background color
+                          color: 'black', // Dark shade of gray for the text
+                          borderRadius: '8px', // Rounded corners
+                          '&:hover': {
+                            bgcolor: 'black', // Black background color on hover
+                            color: 'white', // White text color on hover
+                          },
+                        }}
+                      >
+                        View
+                      </Button>
+                    </CardActions>
+
+                  )}
                 </Card>
               </Grid>
             ))}
           </Grid>
         </Container>
       </main>
-      {/* Footer */}
-      <Box sx={{ bgcolor: 'background.paper', p: 6 }} component="footer">
-        <Typography variant="h6" align="center" gutterBottom>
-          Footer
-        </Typography>
-        <Typography
-          variant="subtitle1"
-          align="center"
-          color="text.secondary"
-          component="p"
-        >
-          Something here to give the footer a purpose!
-        </Typography>
-        <Copyright />
-      </Box>
-      {/* End footer */}
+
+      {selectedEntry && (
+        <JournalEntryPage entry={selectedEntry} onClose={handleCloseEntry} />
+      )}
     </ThemeProvider>
   );
 }
