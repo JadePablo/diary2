@@ -56,19 +56,19 @@ async function post_newEntry(req, res) {
     res.status(201).json({ message: 'Journal entry created successfully', entry: newEntry });
   } catch (error) {
     console.error('Error:', error);
-    res.status(500).json({ error: 'Failed to upload journal entry' });
   }
 }
 
 // update last online status
 async function update_OnlineStatus(req, res) {
+
   const email = req.query.email;
 
   try {
     const updatedUser = await User.findOneAndUpdate(
       { email },
       { lastActiveTime: new Date() },
-      { new: true }
+      { new: true, upsert:true }
     );
     res.json(updatedUser);
   } catch (error) {
@@ -79,6 +79,7 @@ async function update_OnlineStatus(req, res) {
 
 //get journal entries
 async function get_JournalEntries(req, res) {
+
   const email = req.query.email; // Assuming 'email' is passed as a query parameter
 
   try {
@@ -90,4 +91,4 @@ async function get_JournalEntries(req, res) {
   }
 }
 
-export{decodeToken}
+export{decodeToken,post_newEntry,update_OnlineStatus,get_JournalEntries}

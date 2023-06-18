@@ -3,6 +3,7 @@ import { Routes, Route} from 'react-router-dom';
 import Homepage from "./components/Homepage.jsx";
 import EditJournal from "./components/EditJournal.jsx";
 import ViewJournal from "./components/ViewJournal.jsx";
+import TestComponent from "./components/TestComponent.jsx";
 
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/:username/create" element={<EditJournal />}/>
         <Route path="/:username/view" element={<ViewJournal  />} />
+        <Route path ="/testApi" element = {<TestComponent />} />
       </Routes>
   )
 
