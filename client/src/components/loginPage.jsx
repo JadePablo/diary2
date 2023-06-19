@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch } from 'react-redux';
 import { GoogleLogin } from '@react-oauth/google';
 import { handleLoginSuccess } from '../api.js';
@@ -29,6 +29,15 @@ function useHandleLogin() {
 
 function Login() {
   const handleLogin = useHandleLogin();
+  const [showText, setShowText] = useState(false);
+
+  const handleMouseEnter = () => {
+    setShowText(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowText(false);
+  };
 
   return (
     <Box
@@ -38,19 +47,32 @@ function Login() {
         alignItems: 'center',
         justifyContent: 'center',
         height: '100vh',
-        backgroundColor: 'grey',
+        backgroundColor: 'white',
         padding: '20px',
       }}
     >
-      <Typography variant="h4" component="h1" gutterBottom>
-        Diario
-      </Typography>
+      <Box
+        sx={{
+          position: 'relative',
+          textAlign: 'center',
+        }}
+      >
+        <Typography
+          variant="h4"
+          component="h1"
+          gutterBottom
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
+        >
+          Diario
+        </Typography>
+
+      </Box>
       <Typography variant="subtitle1" gutterBottom>
-        Literally just a diary.
+        It's a diary, literally.
       </Typography>
       <Box
         sx={{
-          outline: '4px solid grey',
           backgroundColor: 'white',
           padding: '20px',
           textAlign: 'center',
@@ -61,9 +83,11 @@ function Login() {
           onSuccess={handleLogin}
         />
       </Box>
-      <Typography variant="caption" color="text.secondary" mt={2}>
-        It was that or diarryea pronounced: dai - ur -ee -uh.
-      </Typography>
+      <Box sx={{ mt: 2, textAlign: 'center' }}>
+        <Typography variant="caption" color="text.secondary">
+          It was that or diarryea pronounced: dai - ur -ee -uh.
+        </Typography>
+      </Box>
     </Box>
   );
 }

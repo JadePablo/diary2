@@ -6,7 +6,11 @@ import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { postNewEntry } from '../api.js'; // Update the path to match the location of your API file
+import { postNewEntry } from '../api.js';
+import { DateTimePicker } from '@mui/lab';
+import { Carousel } from 'react-responsive-carousel';
+import 'react-responsive-carousel/lib/styles/carousel.min.css';
+import { Typography } from '@mui/material';
 
 function useHandleVisitor(username) {
   const navigate = useNavigate();
@@ -75,66 +79,149 @@ export default function EditJournal() {
   };
 
   return (
-    <Box sx={{ padding: 2 }}>
-      <Grid container spacing={2}>
-        <Grid item xs={12}>
-          <TextField
-            label="Title"
-            value={title}
-            onChange={handleTitleChange}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            label="Type something"
-            value={text}
-            onChange={handleTextChange}
-            fullWidth
-          />
-        </Grid>
-        <Grid item xs={12}>
+    <Box
+    sx={{
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: '100vh',
+      padding: '2rem',
+      background: 'lightgrey',
+    }}
+  >
+    <Typography
+      variant="h4"
+      component="h1"
+      align="center"
+      color="black"
+      fontWeight="bold"
+      sx={{ marginBottom: '2rem' }}
+    >
+      Write.
+    </Typography>
+      <Paper
+        sx={{
+          padding: '2rem',
+          width: '100%',
+          maxWidth: '600px',
+          background: 'white',
+        }}
+      >
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField
+              label="Title"
+              value={title}
+              onChange={handleTitleChange}
+              fullWidth
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <TextField
+              label="Write here."
+              value={text}
+              onChange={handleTextChange}
+              fullWidth
+              multiline
+              rows={4}
+            />
+          </Grid>
+          <Grid item xs={12}>
           <TextField
             type="date"
-            label="Select Date"
             value={openDate}
             onChange={(e) => setOpenDate(e.target.value)}
             fullWidth
           />
-        </Grid>
-        <Grid item xs={12}>
-          <input
-            type="file"
-            accept="image/*"
-            onChange={handleImageUpload}
-            style={{ display: 'none' }}
-            id="upload-button"
-          />
-          <label htmlFor="upload-button">
-            <Button component="span" variant="contained">
-              Upload Image
+          </Grid>
+          <Grid item xs={12} sx={{textAlign:'center'}}>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              style={{ display: 'none' }}
+              id="upload-button"
+            />
+            <label htmlFor="upload-button">
+              <Button component="span" variant="contained" color="inherit"
+              sx={{
+                bgcolor: '#f5f5f5', // Lighter gray background color
+                color: 'black', // Dark shade of gray for the text
+                borderRadius: '8px', // Rounded corners
+                '&:hover': {
+                  bgcolor: 'black', // Black background color on hover
+                  color: 'white', // White text color on hover
+                },
+              }}
+              >
+                Upload Image
+              </Button>
+            </label>
+            <Button
+              variant="contained"
+              color="inherit"
+              onClick={handleClearImages}
+              sx={{
+                bgcolor: '#f5f5f5', // Lighter gray background color
+                color: 'black', // Dark shade of gray for the text
+                borderRadius: '8px', // Rounded corners
+                '&:hover': {
+                  bgcolor: 'black', // Black background color on hover
+                  color: 'white', // White text color on hover
+                },
+              }}
+            >
+              Clear Images
             </Button>
-          </label>
-          <Button variant="contained" onClick={handleClearImages}>
-            Clear Images
-          </Button>
-          <Button variant="contained" onClick={handleSaveJournalEntry}>
-            Save Journal Entry
-          </Button>
+
+          </Grid>
+          {images.length > 0 && (
+            <Grid item xs={12}>
+              <Carousel
+                showArrows={true}
+                showThumbs={false}
+                showStatus={false}
+                infiniteLoop={true}
+                centerMode={true}
+                centerSlidePercentage={50}
+                dynamicHeight={false}
+              >
+                {images.map((image, index) => (
+                  <div key={index}>
+                    <img
+                      src={image}
+                      alt={`Image ${index + 1}`}
+                      style={{
+                        objectFit: 'cover',
+                        height: '200px',
+                        width: '100%',
+                      }}
+                    />
+                  </div>
+                ))}
+              </Carousel>
+            </Grid>
+          )}
         </Grid>
-        <Grid item xs={12}>
-          <Paper sx={{ padding: 2 }}>
-            {images.map((image, index) => (
-              <img
-                key={index}
-                src={image}
-                alt={`Image ${index + 1}`}
-                style={{ width: '200px', height: 'auto', marginRight: '10px' }}
-              />
-            ))}
-          </Paper>
-        </Grid>
-      </Grid>
+      </Paper>
+      <Button
+        variant="contained"
+        color="inherit"
+        onClick={handleSaveJournalEntry}
+        sx={{
+          bgcolor: '#f5f5f5',
+          color: 'black',
+          borderRadius: '8px',
+          marginTop: '1rem', // Add spacing to the top
+          '&:hover': {
+            bgcolor: 'black',
+            color: 'white',
+          },
+        }}
+      >
+        Save Journal Entry
+      </Button>
     </Box>
   );
 }
