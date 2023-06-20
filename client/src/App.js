@@ -13,7 +13,7 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/:username/create" element={<EditJournal />}/>
         <Route path="/:username/view" element={<ViewJournal  />} />
-        <Route path ="/testApi" element = {<TestComponent />} />
+        <Route path="/testApi" element = {<TestComponent />} />
       </Routes>
   )
 

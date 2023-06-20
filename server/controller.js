@@ -68,7 +68,7 @@ async function update_OnlineStatus(req, res) {
 
   try {
     const updatedUser = await User.findOneAndUpdate(
-      { email },
+      { email: email },
       { lastActiveTime: new Date() },
       { new: true, upsert:true }
     );

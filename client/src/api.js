@@ -31,7 +31,7 @@ async function postNewEntry(entryData) {
 // Function to update online status
 async function updateOnlineStatus(email) {
   try {
-    const response = await axios.put(`${URL}/online-status`, {
+    const response = await axios.put(`${URL}/online-status`, null, {
       params: {
         email,
       },

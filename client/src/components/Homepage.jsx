@@ -145,7 +145,7 @@ export default function Homepage(props) {
     const fetchJournalEntries = async () => {
       try {
         const entries = await getJournalEntries(email);
-        setJournalEntries(entries);
+        setJournalEntries(entries.reverse());
       } catch (error) {
         console.error('Failed to retrieve journal entries:', error.message);
       }

@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import { useDispatch } from 'react-redux';
 import { GoogleLogin } from '@react-oauth/google';
-import { handleLoginSuccess } from '../api.js';
+import { handleLoginSuccess, updateOnlineStatus } from '../api.js';
 import { loginUser } from '../loginReducer.js';
 import { useNavigate } from 'react-router-dom';
 import Box from '@mui/material/Box';
@@ -17,6 +17,7 @@ function useHandleLogin() {
       // Perform additional actions after successful login
       dispatch(loginUser({ email: result.email, name: result.name }));
       if (result) {
+        await updateOnlineStatus(result.email)
         navigate(`/homepage/${encodeURIComponent(result.name)}`); // Navigate to the '/homepage' route
       }
     } catch (error) {
@@ -29,15 +30,6 @@ function useHandleLogin() {
 
 function Login() {
   const handleLogin = useHandleLogin();
-  const [showText, setShowText] = useState(false);
-
-  const handleMouseEnter = () => {
-    setShowText(true);
-  };
-
-  const handleMouseLeave = () => {
-    setShowText(false);
-  };
 
   return (
     <Box
@@ -53,40 +45,59 @@ function Login() {
     >
       <Box
         sx={{
-          position: 'relative',
-          textAlign: 'center',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          padding: '10px',
+          backgroundColor: 'white',
+          fontFamily: 'Arial',
         }}
       >
-        <Typography
-          variant="h4"
-          component="h1"
-          gutterBottom
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-        >
-          Diario
-        </Typography>
+      <Typography variant="caption" color="black" sx={{ fontSize: '24px'}}>
+        <b><i>why?</i></b>
+      </Typography>
+      <Typography variant="caption" color="black" sx={{ fontSize: '12px'}}>
+        <br />
+        <i>lock your thoughts and unlock your potential.</i> ok rapid fire features here we go.
+        set a lock time for journal entries until a specified date. have the option to 'message in a bottle' any of
+        your journal entrys. a.k.a share your entry to someone random, and when they open it, you are notified
+        of where and when it was read.
+        on new year's eve we'll share insight into what/who you talk about the most. and what emotions tend
+        to spill in your entries using machine learning. And that is the only time we will bother you.
+
+        <b>and most importantly, your data is <s>compromised</s> secure. That was a joke. I promise its secure.</b>
+      </Typography>
 
       </Box>
-      <Typography variant="subtitle1" gutterBottom>
-        It's a diary, literally.
-      </Typography>
       <Box
         sx={{
-          backgroundColor: 'white',
-          padding: '20px',
-          textAlign: 'center',
-          fontFamily: 'Times New Roman',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
       >
-        <GoogleLogin
-          onSuccess={handleLogin}
-        />
-      </Box>
-      <Box sx={{ mt: 2, textAlign: 'center' }}>
-        <Typography variant="caption" color="text.secondary">
-          It was that or diarryea pronounced: dai - ur -ee -uh.
+        <Typography variant="h4" component="h1" gutterBottom>
+          Diario
         </Typography>
+        <Typography variant="subtitle1" gutterBottom>
+          It's a diary, literally.
+        </Typography>
+        <Box
+          sx={{
+            backgroundColor: 'white',
+            padding: '20px',
+            textAlign: 'center',
+            fontFamily: 'Times New Roman',
+          }}
+        >
+          <GoogleLogin onSuccess={handleLogin} />
+        </Box>
+        <Box sx={{ mt: 2, textAlign: 'center' }}>
+          <Typography variant="caption" color="text.secondary">
+            It was that or diarryea pronounced: dai - ur -ee -uh.
+          </Typography>
+        </Box>
       </Box>
     </Box>
   );
