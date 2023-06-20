@@ -8,8 +8,6 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { postNewEntry } from '../api.js';
 import { DateTimePicker } from '@mui/lab';
-import { Carousel } from 'react-responsive-carousel';
-import 'react-responsive-carousel/lib/styles/carousel.min.css';
 import { Typography } from '@mui/material';
 
 function useHandleVisitor(username) {
@@ -26,12 +24,14 @@ function useHandleVisitor(username) {
 export default function EditJournal() {
   const { username } = useParams();
   const email = useSelector((state) => state.login.email);
+  const navigate = useNavigate();
   useHandleVisitor(username);
 
   const [text, setText] = useState('');
   const [title, setTitle] = useState('');
-  const [images, setImages] = useState([]);
+  const [image, setImage] = useState('');
   const [openDate, setOpenDate] = useState('');
+  const [showPrompt, setShowPrompt] = useState(false);
 
   const handleTextChange = (event) => {
     setText(event.target.value);
@@ -46,33 +46,36 @@ export default function EditJournal() {
     const reader = new FileReader();
 
     reader.onload = (e) => {
-      setImages((prevImages) => [...prevImages, e.target.result]);
+      setImage(e.target.result);
     };
 
     reader.readAsDataURL(file);
   };
 
-  const handleClearImages = () => {
-    setImages([]);
+  const handleClearImage = () => {
+    setImage('');
   };
 
   const handleSaveJournalEntry = async () => {
-    try {
-      const encodedImages = images.map((image) => {
-        const base64Data = image.split(',')[1]; // Extract base64 data from the image URL
-        return base64Data;
-      });
+    if (!title || !text || !openDate) {
+      setShowPrompt(true);
+      return;
+    }
 
+    try {
+      const base64Data = image.split(',')[1];
       const entryData = {
         email: email,
         text_content: text,
-        images: encodedImages,
+        image: base64Data,
         open_date: openDate,
-        entry_title: title, // Use the title value from the state
+        entry_title: title,
       };
 
       const response = await postNewEntry(entryData);
       console.log('Post New Entry Response:', response);
+
+      navigate(`/homepage/${username}`); // Navigate back to the homepage with the specified route
     } catch (error) {
       console.error('Post New Entry Error:', error.message);
     }
@@ -80,26 +83,26 @@ export default function EditJournal() {
 
   return (
     <Box
-    sx={{
-      display: 'flex',
-      flexDirection: 'column',
-      justifyContent: 'center',
-      alignItems: 'center',
-      minHeight: '100vh',
-      padding: '2rem',
-      background: 'lightgrey',
-    }}
-  >
-    <Typography
-      variant="h4"
-      component="h1"
-      align="center"
-      color="black"
-      fontWeight="bold"
-      sx={{ marginBottom: '2rem' }}
+      sx={{
+        display: 'flex',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        padding: '2rem',
+        background: 'lightgrey',
+      }}
     >
-      Write.
-    </Typography>
+      <Typography
+        variant="h4"
+        component="h1"
+        align="center"
+        color="black"
+        fontWeight="bold"
+        sx={{ marginBottom: '2rem' }}
+      >
+        Write.
+      </Typography>
       <Paper
         sx={{
           padding: '2rem',
@@ -128,79 +131,72 @@ export default function EditJournal() {
             />
           </Grid>
           <Grid item xs={12}>
-          <TextField
-            type="date"
-            value={openDate}
-            onChange={(e) => setOpenDate(e.target.value)}
-            fullWidth
-          />
-          </Grid>
-          <Grid item xs={12} sx={{textAlign:'center'}}>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              style={{ display: 'none' }}
-              id="upload-button"
+            <TextField
+              type="date"
+              value={openDate}
+              onChange={(e) => setOpenDate(e.target.value)}
+              fullWidth
             />
-            <label htmlFor="upload-button">
-              <Button component="span" variant="contained" color="inherit"
-              sx={{
-                bgcolor: '#f5f5f5', // Lighter gray background color
-                color: 'black', // Dark shade of gray for the text
-                borderRadius: '8px', // Rounded corners
-                '&:hover': {
-                  bgcolor: 'black', // Black background color on hover
-                  color: 'white', // White text color on hover
-                },
-              }}
-              >
-                Upload Image
-              </Button>
-            </label>
-            <Button
-              variant="contained"
-              color="inherit"
-              onClick={handleClearImages}
-              sx={{
-                bgcolor: '#f5f5f5', // Lighter gray background color
-                color: 'black', // Dark shade of gray for the text
-                borderRadius: '8px', // Rounded corners
-                '&:hover': {
-                  bgcolor: 'black', // Black background color on hover
-                  color: 'white', // White text color on hover
-                },
-              }}
-            >
-              Clear Images
-            </Button>
-
           </Grid>
-          {images.length > 0 && (
-            <Grid item xs={12}>
-              <Carousel
-                showArrows={true}
-                showThumbs={false}
-                showStatus={false}
-                infiniteLoop={true}
-                centerMode={true}
-                centerSlidePercentage={50}
-                dynamicHeight={false}
+          {image ? (
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <img
+                src={image}
+                alt="Uploaded Image"
+                style={{ height: '200px', width: '100%', objectFit: 'cover' }}
+              />
+              <Button
+                variant="contained"
+                color="inherit"
+                onClick={handleClearImage}
+                sx={{
+                  bgcolor: '#f5f5f5', // Lighter gray background color
+                  color: 'black', // Dark shade of gray for the text
+                  borderRadius: '8px', // Rounded corners
+                  marginTop: '1rem', // Add spacing to the top
+                  '&:hover': {
+                    bgcolor: 'black', // Black background color on hover
+                    color: 'white', // White text color on hover
+                  },
+                }}
               >
-                {images.map((image, index) => (
-                  <div key={index}>
-                    <img
-                      src={image}
-                      alt={`Image ${index + 1}`}
-                      style={{
-                        objectFit: 'cover',
-                        height: '200px',
-                        width: '100%',
-                      }}
-                    />
-                  </div>
-                ))}
-              </Carousel>
+                Clear Image
+              </Button>
+            </Grid>
+          ) : (
+            <Grid item xs={12} sx={{ textAlign: 'center' }}>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                style={{ display: 'none' }}
+                id="upload-button"
+              />
+              <label htmlFor="upload-button">
+                <Button
+                  component="span"
+                  variant="contained"
+                  color="inherit"
+                  sx={{
+                    bgcolor: '#f5f5f5', // Lighter gray background color
+                    color: 'black', // Dark shade of gray for the text
+                    borderRadius: '8px', // Rounded corners
+                    '&:hover': {
+                      bgcolor: 'black', // Black background color on hover
+                      color: 'white', // White text color on hover
+                    },
+                  }}
+                >
+                  Upload Image
+                </Button>
+              </label>
+            </Grid>
+          )}
+          {showPrompt && (
+            <Grid item xs={12}>
+              <Typography variant="body1" color="black">
+                title. content. date. make sure they aren't empty. then submit.
+              </Typography>
             </Grid>
           )}
         </Grid>
