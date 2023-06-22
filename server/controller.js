@@ -1,10 +1,12 @@
 
 import { OAuth2Client } from 'google-auth-library';
+import dotenv from 'dotenv'
 import User from './models/User.js'
 import Entry from './models/Entry.js'
 
+dotenv.config()
 
-const CLIENT_ID = "452818429516-h0l2nm7o9muvq8ks56onkiffgrrspqep.apps.googleusercontent.com"
+const CLIENT_ID = process.env.CLIENT_ID;
 
 async function decodeToken(req, res) {
 

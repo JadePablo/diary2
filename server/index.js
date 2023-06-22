@@ -1,16 +1,18 @@
 import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
+import dotenv from 'dotenv';
 
 import router from './routes.js';
 
+dotenv.config();
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use('/', router);
 
-const connectionString = 'mongodb+srv://allenjade154:G6KhXePPeYQtPQ9g@cluster0.8jxxf5k.mongodb.net/';
+const connectionString = process.env.MONGODB_CONNECTION_STRING;
 
 // Connect to MongoDB
 mongoose
