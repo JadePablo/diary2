@@ -13,8 +13,10 @@ import {disableReactDevTools} from '@fvilers/disable-react-devtools'
 import loginReducer from './loginReducer.js';
 
 
-if (process.env.NODE_ENV === 'production') disableReactDevTools()
-
+if (process.env.NODE_ENV === 'production') {
+  console.log('this might be it') 
+  disableReactDevTools()
+}
 const store = configureStore({
   reducer: {
     login: loginReducer

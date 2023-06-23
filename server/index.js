@@ -14,6 +14,8 @@ app.use('/', router);
 
 const connectionString = process.env.MONGODB_CONNECTION_STRING;
 
+const port = process.env.PORT || 5000;
+
 // Connect to MongoDB
 mongoose
   .connect(connectionString, {
@@ -23,7 +25,7 @@ mongoose
   .then(() => {
     console.log('Connected to MongoDB');
     // Start the server after successful database connection
-    app.listen(5000, () => {
+    app.listen(port, () => {
       console.log(`Listening on port ${5000}`);
     });
   })
