@@ -14,7 +14,6 @@ import loginReducer from './loginReducer.js';
 
 
 if (process.env.NODE_ENV === 'production') {
-  console.log('this might be it') 
   disableReactDevTools()
 }
 const store = configureStore({
@@ -25,7 +24,7 @@ const store = configureStore({
 })
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
-console.log(clientId)
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
