@@ -7,7 +7,6 @@ import Grid from '@mui/material/Grid';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { postNewEntry } from '../api.js';
-import { DateTimePicker } from '@mui/lab';
 import { Typography } from '@mui/material';
 
 function useHandleVisitor(username) {

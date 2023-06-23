@@ -59,11 +59,9 @@ function Login() {
       <Typography variant="caption" color="black" sx={{ fontSize: '12px'}}>
         <br />
         <i>lock your thoughts and unlock your potential.</i> ok rapid fire features here we go.
-        set a lock time for journal entries until a specified date. have the option to 'message in a bottle' any of
-        your journal entrys. a.k.a share your entry to someone random, and when they open it, you are notified
-        of where and when it was read.
+        set a lock time for journal entries until a specified date.
         on new year's eve we'll share insight into what/who you talk about the most. and what emotions tend
-        to spill in your entries using machine learning. And that is the only time we will bother you.
+        to spill in your entries using machine learning. And that is the only time we will bother you via email.
 
         <b>and most importantly, your data is <s>compromised</s> secure. That was a joke. I promise its secure.</b>
       </Typography>
@@ -78,7 +76,7 @@ function Login() {
         }}
       >
         <Typography variant="h4" component="h1" gutterBottom>
-          Diario
+          diario
         </Typography>
         <Typography variant="subtitle1" gutterBottom>
           It's a diary, literally.

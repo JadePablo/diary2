@@ -11,16 +11,18 @@ import { BrowserRouter } from 'react-router-dom';
 
 import loginReducer from './loginReducer.js';
 
-
 const store = configureStore({
   reducer: {
     login: loginReducer
   }
 })
+
+const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <GoogleOAuthProvider clientId="452818429516-h0l2nm7o9muvq8ks56onkiffgrrspqep.apps.googleusercontent.com">
+    <GoogleOAuthProvider clientId={clientId}>
       <BrowserRouter>
         <Provider store={store}>
           <App />
