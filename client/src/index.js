@@ -8,13 +8,18 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import {configureStore} from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import {disablereactDevTools} from '@fvilers/disable-react-devtools'
 
 import loginReducer from './loginReducer.js';
+
+
+if (process.env.NODE_ENV === 'production') disablereactDevTools()
 
 const store = configureStore({
   reducer: {
     login: loginReducer
-  }
+  },
+  devTools: false
 })
 
 const clientId = process.env.REACT_APP_GOOGLE_CLIENT_ID;

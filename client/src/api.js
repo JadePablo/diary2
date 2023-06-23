@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = "http://localhost:5000";
+const URL = "https://diario-api.onrender.com";
 
 // Function to handle login success and verify the token
 async function handleLoginSuccess(token) {
