@@ -8,12 +8,12 @@ import { GoogleOAuthProvider } from '@react-oauth/google';
 import {configureStore} from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import {disablereactDevTools} from '@fvilers/disable-react-devtools'
+import {disableReactDevTools} from '@fvilers/disable-react-devtools'
 
 import loginReducer from './loginReducer.js';
 
 
-if (process.env.NODE_ENV === 'production') disablereactDevTools()
+if (process.env.NODE_ENV === 'production') disableReactDevTools()
 
 const store = configureStore({
   reducer: {
