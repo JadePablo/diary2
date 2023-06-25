@@ -1,13 +1,21 @@
+//modules from external libraries
 import React, { useEffect, useState } from 'react';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
-import Button from '@mui/material/Button';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { postNewEntry } from '../api.js';
+import { postNewEntry } from '../../api.js';
 import { Typography } from '@mui/material';
+
+
+//sub components
+import TitleInput from './editJournalComponents/TitleInput.jsx';
+import TextInput from './editJournalComponents/TextInput.jsx';
+import DateInput from './editJournalComponents/DateInput.jsx';
+import ImageUpload from './editJournalComponents/ImageUpload.jsx';
+import ClearImageButton from './editJournalComponents/ClearImageButton.jsx';
+import SaveButton from './editJournalComponents/SaveButton.jsx';
 
 function useHandleVisitor(username) {
   const navigate = useNavigate();
@@ -112,85 +120,23 @@ export default function EditJournal() {
       >
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <TextField
-              label="Title"
-              value={title}
-              onChange={handleTitleChange}
-              fullWidth
-            />
+            <TitleInput title={title} handleTitleChange={handleTitleChange} />
           </Grid>
+
           <Grid item xs={12}>
-            <TextField
-              label="Write here."
-              value={text}
-              onChange={handleTextChange}
-              fullWidth
-              multiline
-              rows={4}
-            />
+            <TextInput text={text} handleTextChange={handleTextChange} />
           </Grid>
+
           <Grid item xs={12}>
-            <TextField
-              type="date"
-              value={openDate}
-              onChange={(e) => setOpenDate(e.target.value)}
-              fullWidth
-            />
+            <DateInput openDate={openDate} handleDateChange={setOpenDate} />
           </Grid>
+
           {image ? (
-            <Grid item xs={12} sx={{ textAlign: 'center' }}>
-              <img
-                src={image}
-                alt="Uploaded Image"
-                style={{ height: '200px', width: '100%', objectFit: 'cover' }}
-              />
-              <Button
-                variant="contained"
-                color="inherit"
-                onClick={handleClearImage}
-                sx={{
-                  bgcolor: '#f5f5f5', // Lighter gray background color
-                  color: 'black', // Dark shade of gray for the text
-                  borderRadius: '8px', // Rounded corners
-                  marginTop: '1rem', // Add spacing to the top
-                  '&:hover': {
-                    bgcolor: 'black', // Black background color on hover
-                    color: 'white', // White text color on hover
-                  },
-                }}
-              >
-                Clear Image
-              </Button>
-            </Grid>
+            <ClearImageButton handleClearImage={handleClearImage} image={image} />
           ) : (
-            <Grid item xs={12} sx={{ textAlign: 'center' }}>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageUpload}
-                style={{ display: 'none' }}
-                id="upload-button"
-              />
-              <label htmlFor="upload-button">
-                <Button
-                  component="span"
-                  variant="contained"
-                  color="inherit"
-                  sx={{
-                    bgcolor: '#f5f5f5', // Lighter gray background color
-                    color: 'black', // Dark shade of gray for the text
-                    borderRadius: '8px', // Rounded corners
-                    '&:hover': {
-                      bgcolor: 'black', // Black background color on hover
-                      color: 'white', // White text color on hover
-                    },
-                  }}
-                >
-                  Upload Image
-                </Button>
-              </label>
-            </Grid>
+            <ImageUpload handleImageUpload={handleImageUpload} />
           )}
+
           {showPrompt && (
             <Grid item xs={12}>
               <Typography variant="body1" color="black">
@@ -200,23 +146,8 @@ export default function EditJournal() {
           )}
         </Grid>
       </Paper>
-      <Button
-        variant="contained"
-        color="inherit"
-        onClick={handleSaveJournalEntry}
-        sx={{
-          bgcolor: '#f5f5f5',
-          color: 'black',
-          borderRadius: '8px',
-          marginTop: '1rem', // Add spacing to the top
-          '&:hover': {
-            bgcolor: 'black',
-            color: 'white',
-          },
-        }}
-      >
-        Save Journal Entry
-      </Button>
+      <SaveButton handleSaveJournalEntry={handleSaveJournalEntry} />
+
     </Box>
   );
 }

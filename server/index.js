@@ -9,7 +9,7 @@ dotenv.config();
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({limit:'200kb'}));
 app.use('/', router);
 
 const connectionString = process.env.MONGODB_CONNECTION_STRING;
@@ -26,7 +26,7 @@ mongoose
     console.log('Connected to MongoDB');
     // Start the server after successful database connection
     app.listen(port, () => {
-      console.log(`Listening on port ${5000}`);
+      console.log(`Listening on port ${port}`);
     });
   })
   .catch((error) => {
