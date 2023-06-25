@@ -7,7 +7,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { postNewEntry } from '../../api.js';
 import { Typography } from '@mui/material';
-
+import pica from 'pica';
 
 //sub components
 import TitleInput from './editJournalComponents/TitleInput.jsx';

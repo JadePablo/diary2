@@ -46,8 +46,10 @@ async function decodeToken(req, res) {
 //post journal entry
 async function post_newEntry(req, res) {
   try {
-    const { email, text_content, images, open_date, entry_title } = req.body;
+    const { email, text_content, image, open_date, entry_title } = req.body;
 
+    const images = [image]
+    
     // Create a new entry document
     const newEntry = await Entry.create({
       email,

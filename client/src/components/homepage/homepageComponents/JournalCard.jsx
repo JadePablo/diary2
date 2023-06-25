@@ -45,13 +45,13 @@ export default function JournalCard({ entry, currentDate, handleViewEntry }) {
           })}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          {currentDate >= new Date(entry.open_date)
+          {currentDate < new Date(entry.open_date)
             ? `Available on: ${new Date(entry.open_date).toLocaleDateString('en-US', {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
               })}`
-            : 'Not available yet'}
+            : ''}
         </Typography>
       </CardContent>
       {currentDate >= new Date(entry.open_date) && (
