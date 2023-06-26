@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const URL = "https://diario-sykr.onrender.com"
+const URL = process.env.BACKEND_URL
 
 // Function to handle login success and verify the token
 async function handleLoginSuccess(token) {
