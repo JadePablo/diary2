@@ -29,8 +29,8 @@ const EntrySchema = new mongoose.Schema({
   },
 });
 
-const secret = process.env.SECRET
-console.log(secret)
+const secret = process.env.ENCRYPT_SECRET
+
 EntrySchema.plugin(encrypt,{requireAuthenticationCode:false,secret:secret,encryptedFields:['text_content','entry_title']})
 
 const Entry = mongoose.model('Entry', EntrySchema);
