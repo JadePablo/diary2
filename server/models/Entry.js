@@ -1,4 +1,8 @@
 import mongoose from 'mongoose';
+import encrypt from 'mongoose-encryption';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const EntrySchema = new mongoose.Schema({
   email: {
@@ -24,6 +28,10 @@ const EntrySchema = new mongoose.Schema({
     type: String,
   },
 });
+
+const secret = process.env.SECRET
+console.log(secret)
+EntrySchema.plugin(encrypt,{requireAuthenticationCode:false,secret:secret,encryptedFields:['text_content','entry_title']})
 
 const Entry = mongoose.model('Entry', EntrySchema);
 

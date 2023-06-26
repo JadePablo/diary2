@@ -6,6 +6,7 @@ import dotenv from 'dotenv';
 import router from './routes.js';
 
 dotenv.config();
+
 const app = express();
 
 app.use(express.json({limit:'30mb',extended:true}));
