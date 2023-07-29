@@ -2,7 +2,8 @@
 A journal with the option of locking your entries away up untli a certain date. And it uses NLP to show patterns in your writing.
 
 [Try it](https://diario-mxz8.onrender.com/) *~1 min wait time to login for first-time users
-[Cloud Function for 'yearly highlights'](https://github.com/JadePablo/diario_yearly_email_cloud_function/tree/main)
+<br>
+[View the Cloud Function](https://github.com/JadePablo/diario_yearly_email_cloud_function/tree/main) for 'yearly highlights'
 ## Features
 - Spotify Wrapped-esque a.k.a 'yearly highlights': on new year's eve, automatic emails are sent to users containing personable data insights via various NLP techniques on their journal entries regarding:
   - what topics they write about
