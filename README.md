@@ -5,11 +5,11 @@ A journal with the option of locking your entries away up untli a certain date. 
 <br>
 [View the Cloud Function](https://github.com/JadePablo/diario_yearly_email_cloud_function/tree/main) for 'yearly highlights'
 ## Features
-- Spotify Wrapped-esque data insights a.k.a 'yearly highlights': on new year's eve, automatic emails are sent to users containing personable data insights via various NLP techniques on their journal entries regarding:
-  - what topics they write about
-  - what emotions they they convey
-  - who/what/places they write about
-  - Overall sentiment
+- Spotify Wrapped-esque data insights a.k.a 'yearly highlights': on new year's eve, automatic emails are sent to users containing personable data insights using various NLP techniques on their journal entries regarding:
+  - what topics they write about (topic classification)
+  - what emotions they they convey (emotion recognition)
+  - who/what/places they write about (named entity recognition)
+  - Overall sentiment (sentiment analysis)
 - Entries are AES-256 encrypted
 - Lock your journal entries for later viewing at a specified date
 
